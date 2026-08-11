@@ -4,7 +4,7 @@
   <title>Customer Feedback</title>
 
   <style>
-   body {
+  body {
  margin: 0;
   min-height: 100vh;
   background-color: blue;
@@ -61,7 +61,20 @@ h2 {
 display: block;
 align-items: center;
 margin: 20px auto;
+justify-content: center;
 }
+
+
+ input,
+    textarea {
+      width: 70%;
+      padding: 10px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      display: block;
+      align-items: center;
+      justify-content: center;
+    }
 
   </style>
 </head>
@@ -81,17 +94,14 @@ margin: 20px auto;
 
 <br>
 <label>Customer Number</label>
-<br>
 <input type="text" id="Customer_Number" placeholder="Enter Customer Number">
 
 <br>
 <label>Select Appointment Date</label>
-<br>
 <input type = "date" id = "Appointment_Date">
 
 <br>
 <label>Select Visit Time</label>
-<br>
 <input type="time" id="Visit_time" name="Visit_time">
 
 <br>
