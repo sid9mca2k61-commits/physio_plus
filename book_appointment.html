@@ -4,7 +4,8 @@
   <title>Customer Feedback</title>
 
   <style>
-  body {
+
+    body {
  margin: 0;
   min-height: 100vh;
   background-color: blue;
@@ -76,12 +77,12 @@ justify-content: center;
       justify-content: center;
     }
 
+
   </style>
 </head>
 
 <body>
-
-  <div class="FORM_BODY">
+<div class="FORM_BODY">
 
 <img src="Clinic_Logo.png" alt="Clinic_Logo" class="logo">
 
@@ -89,7 +90,6 @@ justify-content: center;
 <br><br><br>
 
 <label>Customer Name</label>
-<br>
 <input type="text" id="Customer_Name" placeholder="Enter Customer Name">
 
 <br>
@@ -98,20 +98,134 @@ justify-content: center;
 
 <br>
 <label>Select Appointment Date</label>
-<input type = "date" id = "Appointment_Date">
+<input type = "date" id = "Appointment_Date" required>
+<p id = "datemessage"></p>
 
 <br>
 <label>Select Visit Time</label>
-<input type="time" id="Visit_time" name="Visit_time">
+<input type="time" id="Visit_time" name="Visit_time" 
+    min="09:30" max="13:00" required>
+ <p id = "message1"></p>
 
 <br>
 <button onclick="BOOK_APPOINTMENT()">
   BOOK APPOINTMENT
 </button>
-
+<p id = "message"></p>
 </div>
+ 
   <script>
-    // Paste your JSFiddle JavaScript here
+
+
+function BOOK_APPOINTMENT() {
+
+    const Customer_Name =
+        document.getElementById('Customer_Name').value.trim();
+
+    const Customer_Number =
+        document.getElementById('Customer_Number').value.trim();
+
+    const Appointment_Date =
+        document.getElementById('Appointment_Date').value.trim();
+
+    const Visit_time =
+        document.getElementById('Visit_time').value.trim();
+
+    // Check fields
+    if (!Customer_Name || !Customer_Number || !Appointment_Date ||!Visit_time) {
+
+        document.getElementById('message').innerText =
+            'Please complete all fields.';
+
+        return;
+    }
+
+ const S_day = new Date(Appointment_Date.value + "T00:00:00");
+  
+if(S_day.getDay() === 0)
+{
+datemessage.innerText = "Sunday Not Avaiable. Please select another Day";
+datemessage.style.color = "red";
+return;
+}
+else 
+datemessage.innerText="";
+
+
+
+ if (Visit_time < "09:30" || Visit_time > "13:00") {
+    message1.innerText = "Please select a time between 9:30 AM and 1:00 PM.";
+    message1.style.color = "red";
+    return;
+  }
+else 
+message1.innerText = "";
+    // Data
+    const data = {
+        Customer_Name: Customer_Name,
+        Customer_Number: Customer_Number,
+        Appointment_Date: Appointment_Date,
+        Visit_time : Visit_time
+    };
+
+    // Google Apps Script URL
+    fetch("https://script.google.com/macros/s/AKfycbxqjHenfzs_DZygwGdSe8QgiYB5mR2jGVq0_MG75_IReGHbkp4TEvgZLamWWGPmCID_5g/exec", {
+    method: "POST",
+    body: JSON.stringify(data)
+  })
+
+    .then(() => {
+
+        document.getElementById('message').innerText =
+            'Thank you! Your Appointmnet Confirmed. We will get back to you shortly';
+
+        // Clear fields
+        document.getElementById('Customer_Name').value = '';
+        document.getElementById('Customer_Number').value = '';
+        document.getElementById('Appointment_Date').value = '';
+        document.getElementById('Visit_time').value = '';
+
+    })
+
+    .catch(error => {
+        message1.innerText = ""
+        console.error('FULL ERROR:', error);
+
+        document.getElementById('message').innerText =
+            'Something went wrong. Check the browser console.';
+    });
+
+fetch("https://hook.eu1.make.com/f9m1rk365ggyjwx18vpub35snh3l4x2d", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.text())
+    .then(result => {
+
+        console.log("Make:", result);
+
+        document.getElementById("message").innerText =
+            "Appointment received successfully.";
+
+    })
+    .catch(error => {
+
+        console.error(error);
+
+        document.getElementById("message").innerText =
+            "Appointment submitted successfully.";
+
+    });
+
+
+}
+
+
+
+    
   </script>
 
 </body>
